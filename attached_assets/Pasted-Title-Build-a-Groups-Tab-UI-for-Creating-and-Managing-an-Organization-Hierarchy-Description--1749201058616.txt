@@ -1,0 +1,67 @@
+Title: Build a “Groups” Tab UI for Creating and Managing an Organization Hierarchy
+
+Description:
+Create a standalone “Groups” tab (e.g. a React component or equivalent) that allows users to build and visualize their organization’s group hierarchy. The UI must meet the following requirements:
+
+1. **Initial Layout & Default Group**
+   - When the “Groups” tab first loads, it should display a single default group row at the top (this is the root node of the hierarchy). For example, this default group might be named “Default Organization” (or simply “Root Group”).
+   - Above the tree, include a prominently placed “+ Create New Group” button. Clicking this button should add a new top‐level group (at the same level as the default group).
+
+2. **Tree‐Style Display of Groups & Subgroups**
+   - Render all groups in a vertical column, indented to reflect parent‐child relationships (i.e. nested subgroups are displayed with progressively larger left padding).
+   - Each group row should display:
+     - A “drag‐handle” icon on the far left (e.g. “⋮⋮”) to indicate that groups can be reordered if desired.
+     - The group name text next to the drag‐handle.
+     - On the far right of the same row (but only visible when hovering over the row), a small “+” icon to create a subgroup under that specific group.
+   - When a user hovers over any group row, a “+” (plus) icon/icon‐button should appear at the right edge of that row. Clicking that “+” icon should immediately insert a new subgroup directly beneath the hovered group, with proper indentation to show nesting.
+
+3. **Adding & Nesting Logic**
+   - **Default Group Creation**: On initial render, the default “Root Group” is automatically created. Its “+” icon must be active, so the user can hover and click to add nested subgroups under it right away.
+   - **“Create New Group” Button**: Always visible at the very top of the tree (above the default group). When clicked, it appends a new top‐level group at the bottom of the first‐level list (i.e. sibling to the default group).
+   - **Subgroup Creation (+ on Hover)**:
+     - Each group row’s “+” icon only appears on hover.
+     - Clicking the “+” icon adds one new child node (subgroup) directly under that row. The new subgroup should default to a placeholder name like “New Group” (editable by the user).
+     - Support multiple levels of nesting. Each nested subgroup row should indent further (e.g. 16–24px additional left margin per level).
+   - The newly created group (top‐level or nested) should immediately become editable (e.g. autofocus its text input so the user can rename it).
+
+4. **Expand/Collapse Behavior**
+   - By default, all group nodes should be expanded (so you see every nested child). But each group row should include a small caret or chevron icon on the left of the group name if it has any children. Clicking the caret toggles expand/collapse of that group’s subtree.
+   - If a group has no children, do not show the caret—only show the drag handle + group name + “+” on hover.
+
+5. **Styling & UX Details**
+   - Use a light background and a clean, modern font. Each row should have a subtle hover highlight (e.g. a light gray background) when hovered.
+   - The “+ Create New Group” button at the top should be styled as a primary button (e.g. a colored background with white text).
+   - Each group row’s “+” icon should be small (e.g. 16×16px) and only appear on hover. It can be a simple “+” or an icon from a font library.
+   - Indentation: Level 1 (root) has no indentation beyond the drag‐handle icon. Level 2 children are indented by ~20px, level 3 by ~40px, and so on.
+   - Provide minimal but clear styling (borders, subtle separators) so the hierarchy is easy to scan.
+
+6. **Editable Group Names**
+   - Each group name should be a text label by default. When the user double‐clicks or clicks a small edit icon next to the name, the label converts into an inline `<input>` for renaming.
+   - Pressing Enter or clicking outside the input saves the new name.
+
+7. **Example Structure (for Clarification)**
+   - Default Organization  
+     ⋮⋮ Root Group (hover → shows “+”)  
+       ⋮⋮ Dev Team (hover → “+”)  
+         ⋮⋮ Frontend (hover → “+”)  
+         ⋮⋮ Backend (hover → “+”)  
+       ⋮⋮ HR (hover → “+”)  
+       ⋮⋮ Sales & Marketing (hover → “+”)  
+         ⋮⋮ Sales (hover → “+”)  
+         ⋮⋮ Marketing (hover → “+”)  
+   - A second top‐level group can be created by clicking the “+ Create New Group” button; it will appear at the same level as “Root Group.”
+
+8. **Technical Requirements**
+   - Use React (functional components + hooks) and plain CSS (or CSS‐in‐JS) for styling.
+   - Manage the group hierarchy as a nested data structure in state (e.g. an array of objects, where each object may have a `children` array).
+   - Provide functions to add a new top‐level group, add a new subgroup under any node, expand/collapse nodes, and edit group names.
+   - No backend integration is required—persist everything client‐side in React state.
+   - Ensure the component is responsive: on narrower screens, allow horizontal scrolling or stacked layout so that nested indentation remains visible.
+
+9. **Deliverables**
+   - A single React component file (e.g. `GroupsTab.jsx` or similar) that can be dropped into a new Replit React project.
+   - CSS (or styled‐components) definitions alongside the component.
+   - Sample default data that pre‐populates the root group on initial render.
+   - Clear comments in code explaining key functions (e.g. `addTopLevelGroup()`, `addSubgroup(parentId)`, `toggleExpand(nodeId)`, `renameGroup(nodeId, newName)`).
+
+Please generate all necessary React (JavaScript + JSX) and CSS code so that I can copy/paste it directly into a Replit React project and have a functioning “Groups” tab displaying the organization hierarchy with the described functionality.

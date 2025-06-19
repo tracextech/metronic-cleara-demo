@@ -1,0 +1,41 @@
+Root Cause Analysis
+1. Items State Issue
+From the console log, I can see:
+
+Items state changed: [{"id":"item-1","hsnCode":"","productName":"","productCode":"","quantity":"","unit":"kg","rmId":"","skuCode":""}]
+The items state contains an empty product with productName: "" - this means the useEffect that should populate items from selected declarations isn't working properly.
+
+2. useEffect Dependency Problem
+The useEffect at lines 175-195 in the frontend has this logic:
+
+useEffect(() => {
+  if (declarationSource === "existing" && selectedDeclarationIds.length > 0 && declarations.length > 0) {
+    // Populate items from selected declarations
+  }
+}, [declarationSource, selectedDeclarationIds, declarations]);
+Issue: When you select a declaration from the table, selectedDeclarationIds gets updated, but the declarations array might not be fully loaded yet, or the filtering logic isn't finding the right declarations.
+
+3. Declaration Query Filtering
+The declarations query filters for:
+
+return data.filter((d: any) => d.status === 'approved' && d.type === 'inbound');
+Potential Issue: If declaration ID 1 doesn't have status === 'approved', it won't be in the declarations array, so the useEffect can't find it to populate the items.
+
+4. Payload Generation Logic
+When the form submits, the payload generation code at line 469 tries:
+
+const finalFormattedItems = formattedItems.length > 0 ? formattedItems : items.filter(item => 
+  item.productName && item.productName.trim() !== ""
+)
+But since items[0].productName = "", this filter returns an empty array, so no product data gets sent.
+
+5. JSX Compilation Errors
+The component has JSX syntax errors that prevent proper compilation, which might be interfering with state updates and event handling.
+
+The Chain of Failure
+User selects declaration from table → selectedDeclarationIds updates
+useEffect should populate items from selected declarations → FAILS (declarations not found or filtering issue)
+Items remain empty with productName: ""
+Form submission filters out empty items → No product data in payload
+Backend receives no product override data → Falls back to source declaration ("Paper")
+The core issue is that the items state is never getting populated with the actual product data from the selected declarations, so there's nothing meaningful to send to the backend.
